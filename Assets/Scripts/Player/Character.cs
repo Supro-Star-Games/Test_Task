@@ -9,6 +9,8 @@ public class Character : MonoBehaviour
     protected int maxHP => _characterMaxHp;
     protected int currentHP;
 
+
+    public int CurrentHP => currentHP;
     public event Action<int, float> HpChanged;
 
     public event Action PlayerWon;

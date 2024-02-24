@@ -65,6 +65,11 @@ public class WeaponManager : MonoBehaviour
                 if (_inventory.ReduceItemAmount(_pistolAmmo, _pistolBulletCost))
                 {
                     _enemy.TakeDamage(_pistolDamage);
+                    if (_enemy.CurrentHP <= 0)
+                    {
+                        break;
+                    }
+
                     _player.TakeDamage(_enemy.GetCharacterDamage());
                 }
 
@@ -73,6 +78,11 @@ public class WeaponManager : MonoBehaviour
                 if (_inventory.ReduceItemAmount(_rifleAmmo, _rifleBulletCost))
                 {
                     _enemy.TakeDamage(_rifleDamage);
+                    if (_enemy.CurrentHP <= 0)
+                    {
+                        break;
+                    }
+
                     _player.TakeDamage(_enemy.GetCharacterDamage());
                 }
 
