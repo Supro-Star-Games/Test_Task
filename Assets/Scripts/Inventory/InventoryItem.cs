@@ -73,8 +73,8 @@ public class InventoryItem : DragInventoryItem
         SaveManager.Instance.InventoryItems.Find(i => i == this)._currenCount = _currenCount;
     }
 
-    public virtual void SetSO<T>(T itemSo)
+    public virtual void SetSO<T>(T itemSo) where T : ScriptableObject
     {
-        ItemSO = itemSo as ScriptableObject;
+        ItemSO = itemSo;
     }
 }
