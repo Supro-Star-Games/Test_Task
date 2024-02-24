@@ -18,10 +18,10 @@ public class MedKitInventoryItem : InventoryItem
     {
         ItemSelected.Invoke(this);
     }
-
-    public void SetSo(MedKitItem item)
+    
+    public override void SetSO<T>(T itemSo)
     {
-        _medKitSO = item;
-        ItemSO = item;
+        base.SetSO(itemSo);
+        _medKitSO = itemSo as MedKitItem;
     }
 }

@@ -9,20 +9,20 @@ public class Inventory : MonoBehaviour
     [SerializeField] private GameObject _itemTemplate;
     [SerializeField] private List<InventoryData> _startItems;
     [SerializeField] private Transform _contentTransform;
-    [SerializeField] private ItemViewPopUp itemViewPopUp;
+    [SerializeField] private ItemViewPopUp _itemViewPopUp;
 
     private GridLayoutGroup _grid;
     private List<InventorySlot> _slots;
     private List<InventoryItem> _items = new();
-    
+
     private void OnEnable()
     {
-        itemViewPopUp.DeleteItem += DeleteItem;
+        _itemViewPopUp.DeleteItem += DeleteItem;
     }
 
     private void OnDisable()
     {
-        itemViewPopUp.DeleteItem -= DeleteItem;
+        _itemViewPopUp.DeleteItem -= DeleteItem;
     }
 
     public void Initialize()
@@ -55,6 +55,7 @@ public class Inventory : MonoBehaviour
     {
         _grid = GetComponent<GridLayoutGroup>();
         _slots = GetComponentsInChildren<InventorySlot>().ToList();
+
         foreach (var item in items)
         {
             AddItem(item.ItemSO, item.Amount);
@@ -67,61 +68,51 @@ public class Inventory : MonoBehaviour
         if (slot)
         {
             UpdateGrid(_grid);
-            var _slotRect = slot.GetComponent<RectTransform>();
+            var slotRect = slot.GetComponent<RectTransform>();
             var newItem = Instantiate(_itemTemplate, _contentTransform);
-            newItem.GetComponent<RectTransform>().anchoredPosition = _slotRect.anchoredPosition;
+            newItem.GetComponent<RectTransform>().anchoredPosition = slotRect.anchoredPosition;
 
             switch (data)
             {
-                case ClothItem _clothItem:
-                    var _clothInventoryItem = newItem.AddComponent<ClothInventoryItem>();
-                    _clothInventoryItem.SetSo(_clothItem);
-                    _clothInventoryItem.InventorySlot = slot;
-                    slot.IsOccupied = true;
-                    _clothInventoryItem.Initialize();
-                    _items.Add(_clothInventoryItem);
-                    SaveManager.Instance.InventoryItems.Add(_clothInventoryItem);
-                    _clothInventoryItem.SetCurrentCount(count);
-                    _clothInventoryItem.ItemSelected += itemViewPopUp.SetView;
+                case ClothItem clothItem:
+                    var clothInventoryItem = newItem.AddComponent<ClothInventoryItem>();
+                    SetItem(clothInventoryItem, clothItem, slot, count);
                     break;
-                case AmmoItem _ammoItem:
-                    var _ammoInventoryItem = newItem.AddComponent<AmmoInventoryItem>();
-                    _ammoInventoryItem.SetSo(_ammoItem);
-                    _ammoInventoryItem.InventorySlot = slot;
-                    slot.IsOccupied = true;
-                    _ammoInventoryItem.Initialize();
-                    _items.Add(_ammoInventoryItem);
-                    SaveManager.Instance.InventoryItems.Add(_ammoInventoryItem);
-                    _ammoInventoryItem.SetCurrentCount(count);
-                    _ammoInventoryItem.ItemSelected += itemViewPopUp.SetView;
+                case AmmoItem ammoItem:
+                    var ammoInventoryItem = newItem.AddComponent<AmmoInventoryItem>();
+                    SetItem(ammoInventoryItem, ammoItem, slot, count);
                     break;
-                case MedKitItem _medKitItem:
-                    var _medKitInventoryItem = newItem.AddComponent<MedKitInventoryItem>();
-                    _medKitInventoryItem.SetSo(_medKitItem);
-                    slot.IsOccupied = true;
-                    _medKitInventoryItem.InventorySlot = slot;
-                    _medKitInventoryItem.Initialize();
-                    _items.Add(_medKitInventoryItem);
-                    SaveManager.Instance.InventoryItems.Add(_medKitInventoryItem);
-                    _medKitInventoryItem.SetCurrentCount(count);
-                    _medKitInventoryItem.ItemSelected += itemViewPopUp.SetView;
+                case MedKitItem medKitItem:
+                    var medKitInventoryItem = newItem.AddComponent<MedKitInventoryItem>();
+                    SetItem(medKitInventoryItem, medKitItem, slot, count);
                     break;
             }
-
-            slot.IsOccupied = true;
         }
         else
         {
             Debug.Log("Inventory is full");
         }
     }
-    
+
+    private void SetItem(InventoryItem item, Item itemSo, InventorySlot slot, int amount)
+    {
+        item.SetSO(itemSo);
+        item.InventorySlot = slot;
+        item.Initialize();
+        _items.Add(item);
+        SaveManager.Instance.InventoryItems.Add(item);
+        item.SetCurrentCount(amount);
+        item.ItemSelected += _itemViewPopUp.SetView;
+        slot.IsOccupied = true;
+    }
+
+
     public void DeleteItem(InventoryItem item)
     {
         _items.Remove(item);
         SaveManager.Instance.InventoryItems.Remove(item);
-        item.ItemSelected -= itemViewPopUp.SetView;
-        _slots.Find(slot => slot == item.InventorySlot).IsOccupied = false;
+        item.InventorySlot.IsOccupied = false;
+        item.ItemSelected -= _itemViewPopUp.SetView;
 
         Destroy(item.gameObject);
     }

@@ -1,23 +1,22 @@
-
 using UnityEngine;
 using UnityEngine.EventSystems;
 
 
 public class DragInventoryItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
-    private Vector2 mouseOffset;
-    private Vector2 originalPosition;
-    private InventorySlot originalSlot;
-    private EquipmentSlot originalESlot;
+    private Vector2 _mouseOffset;
+    private Vector2 _originalPosition;
+    private InventorySlot _originalSlot;
+    private EquipmentSlot _originalESlot;
 
-    public RectTransform MRectTransform { get; set; }
+    private RectTransform MRectTransform { get; set; }
     public InventorySlot InventorySlot { get; set; }
-    
+
     public virtual void Initialize()
     {
         MRectTransform = GetComponent<RectTransform>();
-        originalPosition = InventorySlot.SRectTransform.anchoredPosition;
-        originalSlot = InventorySlot;
+        _originalPosition = InventorySlot.SRectTransform.anchoredPosition;
+        _originalSlot = InventorySlot;
     }
 
     public void OnBeginDrag(PointerEventData eventData)
@@ -26,21 +25,21 @@ public class DragInventoryItem : MonoBehaviour, IBeginDragHandler, IDragHandler,
         RaycastHit2D hit = Physics2D.Raycast(ray.origin, ray.direction);
         if (hit.collider.TryGetComponent(out InventorySlot slot))
         {
-            originalSlot = slot;
-            originalPosition = originalSlot.SRectTransform.anchoredPosition;
+            _originalSlot = slot;
+            _originalPosition = _originalSlot.SRectTransform.anchoredPosition;
         }
         else if (hit.collider.TryGetComponent(out EquipmentSlot eslot))
         {
-            originalESlot = eslot;
-            originalPosition = eslot.SRectTransform.anchoredPosition;
+            _originalESlot = eslot;
+            _originalPosition = eslot.SRectTransform.anchoredPosition;
         }
 
-        mouseOffset = MRectTransform.anchoredPosition - eventData.position;
+        _mouseOffset = MRectTransform.anchoredPosition - eventData.position;
     }
 
     public void OnDrag(PointerEventData eventData)
     {
-        MRectTransform.anchoredPosition = eventData.position + mouseOffset;
+        MRectTransform.anchoredPosition = eventData.position + _mouseOffset;
     }
 
     public void OnEndDrag(PointerEventData eventData)
@@ -50,7 +49,7 @@ public class DragInventoryItem : MonoBehaviour, IBeginDragHandler, IDragHandler,
         ;
         if (hits.Length == 0)
         {
-            MRectTransform.anchoredPosition = originalPosition;
+            MRectTransform.anchoredPosition = _originalPosition;
             return;
         }
 
@@ -62,21 +61,20 @@ public class DragInventoryItem : MonoBehaviour, IBeginDragHandler, IDragHandler,
                 {
                     if (slot.IsOccupied)
                     {
-                        MRectTransform.anchoredPosition = originalPosition;
+                        MRectTransform.anchoredPosition = _originalPosition;
                     }
                     else
                     {
                         MRectTransform.anchoredPosition = hit.collider.GetComponent<RectTransform>().anchoredPosition;
-                        originalPosition = slot.SRectTransform.anchoredPosition;
-                        originalSlot.IsOccupied = false;
+                        _originalPosition = slot.SRectTransform.anchoredPosition;
+                        _originalSlot.IsOccupied = false;
                         slot.IsOccupied = true;
                         InventorySlot = slot;
-                        if (originalESlot != null)
+                        if (_originalESlot != null)
                         {
-                            originalESlot.RemoveItem();
-                            originalESlot = null;
+                            _originalESlot.RemoveItem();
+                            _originalESlot = null;
                         }
-                        
                     }
                 }
 
@@ -86,16 +84,15 @@ public class DragInventoryItem : MonoBehaviour, IBeginDragHandler, IDragHandler,
                     {
                         SwapPlaces(equipmentSlot, clothItem);
                         equipmentSlot.ChangeItem(clothItem);
-                        
                     }
                     else
                     {
-                        MRectTransform.anchoredPosition = originalPosition;
+                        MRectTransform.anchoredPosition = _originalPosition;
                     }
                 }
                 else
                 {
-                    MRectTransform.anchoredPosition = originalPosition;
+                    MRectTransform.anchoredPosition = _originalPosition;
                 }
             }
         }
@@ -103,17 +100,16 @@ public class DragInventoryItem : MonoBehaviour, IBeginDragHandler, IDragHandler,
 
     public void SwapPlaces(EquipmentSlot equipmentSlot, ClothInventoryItem clothItem)
     {
-        
         if (equipmentSlot.CurrentItem != null)
         {
             clothItem.MRectTransform.anchoredPosition = equipmentSlot.SRectTransform.anchoredPosition;
-            equipmentSlot.CurrentItem.MRectTransform.anchoredPosition = originalPosition;
+            equipmentSlot.CurrentItem.MRectTransform.anchoredPosition = _originalPosition;
+            (_originalPosition, equipmentSlot.CurrentItem._originalPosition) = (equipmentSlot.CurrentItem._originalPosition, _originalPosition);
         }
         else
         {
             clothItem.MRectTransform.anchoredPosition = equipmentSlot.SRectTransform.anchoredPosition;
+            _originalSlot.IsOccupied = false;
         }
-
-        originalSlot.IsOccupied = false;
     }
 }

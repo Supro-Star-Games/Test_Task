@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 
 public class PlayerCharacter : Character
@@ -7,7 +8,7 @@ public class PlayerCharacter : Character
     [SerializeField] private Inventory _inventory;
     [SerializeField] private EquipmentSlot _bodySlot;
     [SerializeField] private EquipmentSlot _headSlot;
-    [SerializeField] private ItemViewPopUp itemViewPopUp;
+    [SerializeField] private ItemViewPopUp _itemViewPopUp;
 
     private int _headArmor;
     private int _bodyArmor;
@@ -40,7 +41,7 @@ public class PlayerCharacter : Character
         _bodySlot.ItemRemoved += RemoveArmor;
         _headSlot.ItemRemoved += RemoveArmor;
         _headSlot.ItemChanged += SetArmor;
-        itemViewPopUp.UseItem += OnUseItem;
+        _itemViewPopUp.UseItem += OnUseItem;
     }
 
     private void OnDisable()
@@ -49,7 +50,7 @@ public class PlayerCharacter : Character
         _headSlot.ItemRemoved -= RemoveArmor;
         _bodySlot.ItemChanged -= SetArmor;
         _headSlot.ItemChanged -= SetArmor;
-        itemViewPopUp.UseItem -= OnUseItem;
+        _itemViewPopUp.UseItem -= OnUseItem;
     }
 
 

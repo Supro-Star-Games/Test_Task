@@ -2556,7 +2556,7 @@ MonoBehaviour:
   _inventory: {fileID: 1934571383}
   _bodySlot: {fileID: 1112827886}
   _headSlot: {fileID: 4828637994382287859}
-  itemViewPopUp: {fileID: 532552710}
+  _itemViewPopUp: {fileID: 532552710}
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
@@ -8811,7 +8811,7 @@ MonoBehaviour:
   - _itemSO: {fileID: 11400000, guid: b8cf7707fc0cd1c4b8499bca10f80c0a, type: 2}
     _amount: 1
   _contentTransform: {fileID: 1934571381}
-  itemViewPopUp: {fileID: 532552710}
+  _itemViewPopUp: {fileID: 532552710}
 --- !u!114 &1934571384
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9637,10 +9637,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 1493540400}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.53152364, y: 0.060000002}
-  m_AnchorMax: {x: 0.99100006, y: 0.94000006}
-  m_AnchoredPosition: {x: -0.3999977, y: -0.000045776367}
-  m_SizeDelta: {x: 2, y: 0.40000153}
+  m_AnchorMin: {x: 0.41900003, y: 0.28}
+  m_AnchorMax: {x: 0.9865237, y: 0.69000006}
+  m_AnchoredPosition: {x: 0.40999985, y: -1.25}
+  m_SizeDelta: {x: 2.3799992, y: 2.0699997}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2100764852
 MonoBehaviour:
@@ -9689,7 +9689,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 29.35
+  m_fontSize: 36.25
   m_fontSizeBase: 53.6
   m_fontWeight: 400
   m_enableAutoSizing: 1

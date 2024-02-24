@@ -1,5 +1,3 @@
-
-
 public class AmmoInventoryItem : InventoryItem
 {
     private AmmoItem _ammoSO;
@@ -22,11 +20,10 @@ public class AmmoInventoryItem : InventoryItem
         ItemSelected.Invoke(this);
     }
 
-    public void SetSo(AmmoItem _item)
-    {
-        _ammoSO = _item;
-        ItemSO = _item;
-    }
 
-    
+    public override void SetSO<T>(T itemSo)
+    {
+        base.SetSO(itemSo);
+        _ammoSO = itemSo as AmmoItem;
+    }
 }

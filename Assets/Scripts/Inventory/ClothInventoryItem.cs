@@ -1,11 +1,6 @@
-
-using UnityEngine;
-
-
 public class ClothInventoryItem : InventoryItem
 {
-    [SerializeField] private ClothItem _clothSO;
-
+    private ClothItem _clothSO;
     private DefendType _defendType;
     private int _armor;
     public DefendType DefendType => _defendType;
@@ -27,9 +22,9 @@ public class ClothInventoryItem : InventoryItem
         ItemSelected.Invoke(this);
     }
 
-    public void SetSo(ClothItem item)
+    public override void SetSO<T>(T itemSo)
     {
-        _clothSO = item;
-        ItemSO = item;
+        base.SetSO(itemSo);
+        _clothSO = itemSo as ClothItem;
     }
 }
